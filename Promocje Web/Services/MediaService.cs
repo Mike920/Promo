@@ -30,8 +30,8 @@ namespace Promocje_Web.Services
                 throw new Exception("Video file is not supported");
                 
 
-            VideoQuality videoQuality = ServerParams.VideoParams.ClassifyVideo(mediaInfo);
-            MediaInfo videoParams = ServerParams.VideoParams.GetVideoParams(videoQuality);
+            VideoQuality videoQuality = ServerTools.VideoParams.ClassifyVideo(mediaInfo);
+            MediaInfo videoParams = ServerTools.VideoParams.GetVideoParams(videoQuality);
 
             dbRecord.VideoQuality = videoQuality;
 
@@ -72,7 +72,7 @@ namespace Promocje_Web.Services
                 
                 // Convert to SD
                 string command = String.Format("-i \"{0}\" -an -b:v {1}k -s {2} -vcodec libx264 -r 24  -g 48 -keyint_min 48 -sc_threshold 0 -pass 1 -passlogfile \"{3}\" \"{4}\"",
-                            mediaDir, ServerParams.VideoParams.p360.Video.Bitrate, ServerParams.VideoParams.p360.Video.Resolution, outputPasslogFile, outputVidSd);
+                            mediaDir, ServerTools.VideoParams.p360.Video.Bitrate, ServerTools.VideoParams.p360.Video.Resolution, outputPasslogFile, outputVidSd);
                 var result = ffmpeg.RunCommand(command,mediaId,ConversionPercentages,"sd",mediaInfo.Video.Duration);
              
 

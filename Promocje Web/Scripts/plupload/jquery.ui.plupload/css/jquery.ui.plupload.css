@@ -55,6 +55,7 @@
 
 .plupload_header_text {
 	font: normal 12px sans-serif;
+    display:none;
 }
 
 .plupload_view_switch {

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Promocje_Web.Models.Kategoria>
+﻿@model IEnumerable<Promocje_Web.Models.Sklep>
 
 @{
     ViewBag.Title = "Index";
@@ -11,12 +11,23 @@
 </p>
 <table class="table">
     <tr>
-        <th>Nazwa</th>
+        <th>
+            @Html.DisplayNameFor(model => model.LogoUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KategoriaId)
+        </th>
+        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>@item.Id</td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LogoUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KategoriaId)
+        </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |

@@ -46,7 +46,7 @@ namespace Promocje_Web.Controllers
             if (mediaFile == null || mediaFile.IsBeingConverted)
                 return HttpNotFound();
 
-            var videoParams = ServerParams.VideoParams.GetVideoParams(mediaFile.VideoQuality);
+            var videoParams = ServerTools.VideoParams.GetVideoParams(mediaFile.VideoQuality);
 
             ViewBag.MediaId = id;
             ViewBag.T = mediaFile.Title;

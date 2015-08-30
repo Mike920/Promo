@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -175,6 +176,8 @@
     <Compile Include="Controllers\KategorieController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
+    <Compile Include="Controllers\Sk2Controller.cs" />
+    <Compile Include="Controllers\SkController.cs" />
     <Compile Include="Controllers\SklepyController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Extensions\VideoResult.cs" />
@@ -189,9 +192,15 @@
     <Compile Include="Models\MediaFile.cs" />
     <Compile Include="Models\Sklep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\MediaService.cs" />
-    <Compile Include="Services\ServerParams.cs" />
+    <Compile Include="Services\ServerTools.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utility\CustomRemoteValidationAttribute.cs" />
     <Compile Include="Utility\FFmpeg.cs" />
     <Compile Include="Utility\Mp4Box.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -247,60 +256,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
-    <Content Include="Libs\avcodec-55.dll" />
-    <Content Include="Libs\avdevice-55.dll" />
-    <Content Include="Libs\avfilter-4.dll" />
-    <Content Include="Libs\avformat-55.dll" />
-    <Content Include="Libs\avresample-1.dll" />
-    <Content Include="Libs\avutil-52.dll" />
-    <Content Include="Libs\ffmpeg.exe" />
-    <Content Include="Libs\ffplay.exe" />
-    <Content Include="Libs\ffprobe.exe" />
-    <Content Include="Libs\gm_aac_in.dll" />
-    <Content Include="Libs\gm_ac3_in.dll" />
-    <Content Include="Libs\gm_bifs_dec.dll" />
-    <Content Include="Libs\gm_ctx_load.dll" />
-    <Content Include="Libs\gm_dummy_in.dll" />
-    <Content Include="Libs\gm_dx_hw.dll" />
-    <Content Include="Libs\gm_ffmpeg_in.dll" />
-    <Content Include="Libs\gm_ft_font.dll" />
-    <Content Include="Libs\gm_gdip_raster.dll" />
-    <Content Include="Libs\gm_gpac_js.dll" />
-    <Content Include="Libs\gm_img_in.dll" />
-    <Content Include="Libs\gm_ismacryp.dll" />
-    <Content Include="Libs\gm_isom_in.dll" />
-    <Content Include="Libs\gm_laser_dec.dll" />
-    <Content Include="Libs\gm_mp3_in.dll" />
-    <Content Include="Libs\gm_mpd_in.dll" />
-    <Content Include="Libs\gm_mpegts_in.dll" />
-    <Content Include="Libs\gm_mse_in.dll" />
-    <Content Include="Libs\gm_odf_dec.dll" />
-    <Content Include="Libs\gm_ogg.dll" />
-    <Content Include="Libs\gm_openhevc_dec.dll" />
-    <Content Include="Libs\gm_opensvc_dec.dll" />
-    <Content Include="Libs\gm_platinum.dll" />
-    <Content Include="Libs\gm_rtp_in.dll" />
-    <Content Include="Libs\gm_saf_in.dll" />
-    <Content Include="Libs\gm_soft_raster.dll" />
-    <Content Include="Libs\gm_svg_in.dll" />
-    <Content Include="Libs\gm_timedtext.dll" />
-    <Content Include="Libs\gm_vtt_in.dll" />
-    <Content Include="Libs\gm_wav_out.dll" />
-    <Content Include="Libs\gm_widgetman.dll" />
-    <Content Include="Libs\gm_xvid_dec.dll" />
-    <Content Include="Libs\GPAX.dll" />
-    <Content Include="Libs\js.dll" />
-    <Content Include="Libs\libeay32.dll" />
-    <Content Include="Libs\libgpac.dll" />
-    <Content Include="Libs\libLibOpenHevcWrapper.dll" />
-    <Content Include="Libs\libx264-142.dll" />
-    <Content Include="Libs\mfc100.dll" />
-    <Content Include="Libs\mp4box.exe" />
-    <Content Include="Libs\msvcr100.dll" />
-    <Content Include="Libs\OpenSVCDecoder.dll" />
-    <Content Include="Libs\ssleay32.dll" />
-    <Content Include="Libs\swresample-0.dll" />
-    <Content Include="Libs\swscale-2.dll" />
     <Content Include="Scripts\bitdash.min.js" />
     <Content Include="Scripts\bitdashplayer.min.css" />
     <Content Include="Scripts\bitdashplayer.min.js" />
@@ -476,10 +431,22 @@
     <Content Include="Views\Sklepy\Details.cshtml" />
     <Content Include="Views\Sklepy\Edit.cshtml" />
     <Content Include="Views\Sklepy\Index.cshtml" />
+    <Content Include="Views\Sk\Create.cshtml" />
+    <Content Include="Views\Sk\Delete.cshtml" />
+    <Content Include="Views\Sk\Details.cshtml" />
+    <Content Include="Views\Sk\Edit.cshtml" />
+    <Content Include="Views\Sk\Index.cshtml" />
+    <Content Include="Views\Sk2\Create.cshtml" />
+    <Content Include="Views\Sk2\Delete.cshtml" />
+    <Content Include="Views\Sk2\Details.cshtml" />
+    <Content Include="Views\Sk2\Edit.cshtml" />
+    <Content Include="Views\Sk2\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Videos\" />
+    <Folder Include="MediaData\Logos\" />
     <Folder Include="MediaData\Videos\" />
+    <Folder Include="Temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -487,6 +454,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

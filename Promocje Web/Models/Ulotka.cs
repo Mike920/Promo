@@ -46,6 +46,7 @@ namespace Promocje_Web.Models
        
 
         public virtual ApplicationUser ApplicationUser { get; set; }
+        public int SklepId { get; set; }
         public virtual Sklep Sklep { get; set; }
     }
 

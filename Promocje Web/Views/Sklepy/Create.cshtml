@@ -1,39 +1,57 @@
 ﻿@model Promocje_Web.Models.Sklep
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Dodaj sklep";
 }
 
-<h2>Create</h2>
+<h2>Dodaj</h2>
 
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Sklep</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-5">
                 @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            @Html.LabelFor(model => model.KategoriaId, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.KategoriaId, (SelectList)ViewBag.KategoriaId, "Wybierz kategorię", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KategoriaId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group"><div class="col-md-5">Logo:</div></div>
+
+        <div class="form-group" >
+            <div class="col-md-5">
+                @Html.HiddenFor(model => model.LogoUrl)
+                @Html.ValidationMessageFor(model => model.LogoUrl,"", new { @class = "text-danger" })
+                <div id="uploader">
+                    <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" >
+            <div class="col-md-offset-2 col-md-5" style="margin-left:0;">
+                <input type="submit" value="Dodaj" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
-<div id="uploader" >
-    <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
-</div>
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -51,54 +69,74 @@
     <script src="~/Scripts/plupload/moxie.js"></script>
     <script src="~/Scripts/plupload/plupload.dev.js"></script>
     <script src="~/Scripts/plupload/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+    <script src="~/Scripts/plupload/i18n/pl.js"></script>
 
     <script type="text/javascript">
-    // Initialize the widget when the DOM is ready
-    $(function() {
-        $("#uploader").plupload({
-            // General settings
-            runtimes : 'html5,flash,silverlight,html4',
-            url : "/examples/upload",
-
-            // Maximum file size
-            max_file_size : '4mb',
-
-            chunk_size: '1mb',
-
-            // Resize images on clientside if we can
-            resize : {
-                width : 150,
-                height : 150,
-                quality : 90,
-                crop: false // crop to exact dimensions
-            },
-
-            // Specify what files to browse for
-            filters : [
-                {title : "Image files", extensions : "jpg,gif,png"}
-            ],
-
-            // Rename files by clicking on their titles
-            rename: true,
-
-            // Sort files
-            sortable: true,
-
-            // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
-            dragdrop: true,
-
-            // Views to activate
-            views: {
-                list: true,
-                thumbs: true, // Show thumbs
-                active: 'thumbs'
-            },
-
-            // Flash settings
-            flash_swf_url : "~/Scripts/plupload/Moxie.swf",
-            // Silverlight settings
-            silverlight_xap_url: "~/Scripts/plupload/js/Moxie.xap"
+        
+        //Enable validation of hidden fields
+        $.validator.setDefaults({
+            ignore: []
         });
-    });
+
+        // Initialize the widget when the DOM is ready
+        $(function () {
+            var filesNames = [];
+          
+            var uploader = $("#uploader").plupload({
+                // General settings
+                runtimes : 'html5,flash,silverlight,html4',
+                url : "/api/TempFile",
+
+                // Maximum file size
+                max_file_size : '4mb',
+                max_file_count: 1,
+                multi_selection : false,
+                //chunk_size: '1mb',
+
+                // Resize images on clientside if we can
+                resize : {
+                    width : 200,
+                    height : 200,
+                    quality : 100,
+                    crop: false // crop to exact dimensions
+                },
+
+                // Specify what files to browse for
+                filters : [
+                    { title: "Image files", extensions: "jpg,gif,png" }
+                ],
+
+                // Rename files by clicking on their titles
+                rename: true,
+
+                // Sort files
+                sortable: true,
+
+                // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
+                dragdrop: true,
+
+                // Views to activate
+                views: {
+                    list: true,
+                    thumbs: true, // Show thumbs
+                    active: 'thumbs'
+                },
+
+                // Flash settings
+                flash_swf_url : "~/Scripts/plupload/Moxie.swf",
+                // Silverlight settings
+                silverlight_xap_url: "~/Scripts/plupload/js/Moxie.xap",
+
+                init: {
+                    FileUploaded: function (up, file, info) {
+                        var response = $.parseJSON(info.response);
+                        //filesNames = filesNames.concat(response);
+                        $('#LogoUrl').val(response[0]);
+                        $('#LogoUrl').valid();
+                    }
+                }
+            });
+
+        });
     </script>
 }

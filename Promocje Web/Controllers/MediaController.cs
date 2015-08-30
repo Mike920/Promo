@@ -97,7 +97,7 @@ namespace Promocje_Web.Controllers
             if(mediaFile == null || mediaFile.IsBeingConverted)
                 return HttpNotFound();
 
-            var videoParams = ServerParams.VideoParams.GetVideoParams(mediaFile.VideoQuality);
+            var videoParams = ServerTools.VideoParams.GetVideoParams(mediaFile.VideoQuality);
   
             ViewBag.MediaId = id;
             ViewBag.T = mediaFile.Title;
@@ -126,7 +126,7 @@ namespace Promocje_Web.Controllers
         [Authorize]
         public ActionResult Upload()
         {
-            ViewBag.Category = new SelectList(ServerParams.CategoriesList.List);
+            ViewBag.Category = new SelectList(ServerTools.CategoriesList.List);
             return View();
         }
 
@@ -140,9 +140,9 @@ namespace Promocje_Web.Controllers
 
             mediaFile.ApplicationUserId = User.Identity.GetUserId();
 
-            if (!ModelState.IsValid || !isFileValid || !ServerParams.CategoriesList.List.Contains(mediaFile.Category))
+            if (!ModelState.IsValid || !isFileValid || !ServerTools.CategoriesList.List.Contains(mediaFile.Category))
             {
-               // ViewBag.Kategoria = new SelectList(ServerParams.CategoriesList.List);
+               // ViewBag.Kategoria = new SelectList(ServerTools.CategoriesList.List);
  
                // return View(mediaFile);
                 var ms = ModelState;

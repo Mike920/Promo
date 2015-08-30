@@ -11,7 +11,7 @@
     </a>
 </li>
 
-@foreach (var category in ServerParams.CategoriesList.List)
+@foreach (var category in ServerTools.CategoriesList.List)
 {
     <li class="sub-menu">
         <a href="@Url.Action("Category","Media",new{id = category})">

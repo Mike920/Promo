@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using Promocje_Web.Services;
 
 namespace Promocje_Web.Controllers.Api
 {
@@ -22,30 +25,26 @@ namespace Promocje_Web.Controllers.Api
         }
 
         // POST: api/TempFile
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post()
         {
-            HttpRequestMessage request = this.Request;
-            if (!request.Content.IsMimeMultipartContent())
+            List<string> fileNames = new List<string>();
+             
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                foreach (string file in httpRequest.Files)
+                {                    
+                    var postedFile = httpRequest.Files[file];
+                    string uniqueName = System.IO.Path.GetRandomFileName() + postedFile.FileName;
+                    var filePath = Path.Combine(ServerTools.TempFolderPath, uniqueName);
+                    postedFile.SaveAs(filePath);
+                    fileNames.Add(uniqueName);
+                    // NOTE: To store in memory use postedFile.InputStream
+                }
+                
             }
 
-            string root = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/uploads");
-            var provider = new MultipartFormDataStreamProvider(root);
-
-            var task = request.Content.ReadAsMultipartAsync(provider).
-                ContinueWith<HttpResponseMessage>(o =>
-                {
-
-                    string file1 = provider.BodyPartFileNames.First().Value;
-                    // this is the file name on the server where the file was saved 
-
-                    return new HttpResponseMessage()
-                    {
-                        Content = new StringContent("File uploaded.")
-                    };
-                }
-            ); 
+            return Ok(fileNames);
         }
 
         // PUT: api/TempFile/5
