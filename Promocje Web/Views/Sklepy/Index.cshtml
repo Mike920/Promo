@@ -11,11 +11,16 @@
 </p>
 <table class="table">
     <tr>
-        <th></th>
+        <th>Nazwa</th>
+        <th>Logo</th>
+        <th>Kategoria</th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
+        <td>@item.Id</td>
+        <td><a href="@Url.Content(item.LogoUrl)"><img src="@Url.Content(item.LogoUrl)" alt="" /></a></td>
+        <td>@item.KategoriaId</td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |

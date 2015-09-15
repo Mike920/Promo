@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Promocje_Web.Migrations;
+using SQLite.CodeFirst;
 
 namespace Promocje_Web.Models
 {
@@ -32,37 +32,33 @@ namespace Promocje_Web.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
-        {
-           
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext,Configuration>());
-        }
+            : base("DefaultConnection", throwIfV1Schema: false){}
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
 
-       /* protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Migrations.Configuration>());
-        }*/
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Comment>()
+            Database.SetInitializer(new SqliteCreateDatabaseIfNotExists<ApplicationDbContext>(modelBuilder));
+
+         /*   modelBuilder.Entity<Comment>()
                         .HasOptional(s => s.Parent)
                         .WithMany(s => s.Children)
-                        .HasForeignKey(s => s.ParentId);
+                        .HasForeignKey(s => s.ParentId);*/
         }
         public DbSet<MediaFile> MediaFiles { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
-        public System.Data.Entity.DbSet<Promocje_Web.Models.Kategoria> Kategorias { get; set; }
+        public System.Data.Entity.DbSet<Promocje_Web.Models.Kategoria> Kategorie { get; set; }
 
-        public System.Data.Entity.DbSet<Promocje_Web.Models.Sklep> Skleps { get; set; }
+        public System.Data.Entity.DbSet<Promocje_Web.Models.Sklep> Sklepy { get; set; }
+
+        public System.Data.Entity.DbSet<Promocje_Web.Models.Ulotka> Ulotki { get; set; }
+        
     }
 }

@@ -7,7 +7,7 @@
 <h2>Dodaj</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm(null,null,FormMethod.Post, new { @id = "upload-form" })) 
 {
     @Html.AntiForgeryToken()
 
@@ -45,7 +45,7 @@
 
         <div class="form-group" >
             <div class="col-md-offset-2 col-md-5" style="margin-left:0;">
-                <input type="submit" value="Dodaj" class="btn btn-default" />
+                <input type="button" id="submitUpload" value="Dodaj" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -128,12 +128,33 @@
                 silverlight_xap_url: "~/Scripts/plupload/js/Moxie.xap",
 
                 init: {
+                    FilesAdded: function(){
+                        $('#LogoUrl').val('ok');
+                        $('#LogoUrl').valid();
+                    },
+                    FilesRemoved: function () {
+                        $('#LogoUrl').val('');
+                    },
                     FileUploaded: function (up, file, info) {
                         var response = $.parseJSON(info.response);
                         //filesNames = filesNames.concat(response);
                         $('#LogoUrl').val(response[0]);
                         $('#LogoUrl').valid();
+
+                        $('#upload-form').submit();
                     }
+                },
+                buttons: { browse: true, start: false, stop: false }
+                
+            });
+
+            //customize upload button behavior
+            $('#submitUpload').click(function () {
+                var $form = $('#upload-form');
+                if ($form.valid()) {
+                    $('#submitUpload').val('Wysyłanie ...');
+                    $('#submitUpload').attr("disabled", true);
+                    $("#uploader").plupload('start');
                 }
             });
 

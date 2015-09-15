@@ -17,7 +17,7 @@ namespace Promocje_Web.Controllers
         // GET: Sk2
         public ActionResult Index()
         {
-            return View(db.Skleps.ToList());
+            return View(db.Sklepy.ToList());
         }
 
         // GET: Sk2/Details/5
@@ -27,7 +27,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sklep sklep = db.Skleps.Find(id);
+            Sklep sklep = db.Sklepy.Find(id);
             if (sklep == null)
             {
                 return HttpNotFound();
@@ -50,7 +50,7 @@ namespace Promocje_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Skleps.Add(sklep);
+                db.Sklepy.Add(sklep);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -65,7 +65,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sklep sklep = db.Skleps.Find(id);
+            Sklep sklep = db.Sklepy.Find(id);
             if (sklep == null)
             {
                 return HttpNotFound();
@@ -96,7 +96,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sklep sklep = db.Skleps.Find(id);
+            Sklep sklep = db.Sklepy.Find(id);
             if (sklep == null)
             {
                 return HttpNotFound();
@@ -109,8 +109,8 @@ namespace Promocje_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Sklep sklep = db.Skleps.Find(id);
-            db.Skleps.Remove(sklep);
+            Sklep sklep = db.Sklepy.Find(id);
+            db.Sklepy.Remove(sklep);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

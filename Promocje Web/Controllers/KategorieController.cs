@@ -17,7 +17,7 @@ namespace Promocje_Web.Controllers
         // GET: Kategorie
         public ActionResult Index()
         {
-            return View(db.Kategorias.ToList());
+            return View(db.Kategorie.ToList());
         }
 
         // GET: Kategorie/Details/5
@@ -27,7 +27,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Kategoria kategoria = db.Kategorias.Find(id);
+            Kategoria kategoria = db.Kategorie.Find(id);
             if (kategoria == null)
             {
                 return HttpNotFound();
@@ -50,7 +50,7 @@ namespace Promocje_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Kategorias.Add(kategoria);
+                db.Kategorie.Add(kategoria);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -65,7 +65,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Kategoria kategoria = db.Kategorias.Find(id);
+            Kategoria kategoria = db.Kategorie.Find(id);
             if (kategoria == null)
             {
                 return HttpNotFound();
@@ -96,7 +96,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Kategoria kategoria = db.Kategorias.Find(id);
+            Kategoria kategoria = db.Kategorie.Find(id);
             if (kategoria == null)
             {
                 return HttpNotFound();
@@ -109,8 +109,8 @@ namespace Promocje_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Kategoria kategoria = db.Kategorias.Find(id);
-            db.Kategorias.Remove(kategoria);
+            Kategoria kategoria = db.Kategorie.Find(id);
+            db.Kategorie.Remove(kategoria);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

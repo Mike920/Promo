@@ -19,7 +19,7 @@ namespace Promocje_Web.Controllers
         // GET: Sklepy
         public ActionResult Index()
         {
-            return View(db.Skleps.ToList());
+            return View(db.Sklepy.ToList());
         }
 
         // GET: Sklepy/Details/5
@@ -29,7 +29,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sklep sklep = db.Skleps.Find(id);
+            Sklep sklep = db.Sklepy.Find(id);
             if (sklep == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace Promocje_Web.Controllers
         // GET: Sklepy/Create
         public ActionResult Create()
         {
-            ViewBag.KategoriaId = new SelectList(db.Kategorias, "Id", "Id");
+            ViewBag.KategoriaId = new SelectList(db.Kategorie, "Id", "Id");
             return View();
         }
 
@@ -51,26 +51,26 @@ namespace Promocje_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,LogoUrl,KategoriaId")] Sklep sklep)
         {
-            
+           
             if (ModelState.IsValid && ServerTools.TempFolderContains(sklep.LogoUrl))
             {
                 string sourcePath = Path.Combine(ServerTools.TempFolderPath, sklep.LogoUrl);
                 string destinationPath = Path.Combine(ServerTools.MediaFolderPath("Logos"), sklep.LogoUrl);
                 System.IO.File.Move(sourcePath, destinationPath);
                 //todo server side image resize
-                sklep.LogoUrl = destinationPath;
-                db.Skleps.Add(sklep);
+                sklep.LogoUrl = ServerTools.RelativePath(destinationPath);
+                db.Sklepy.Add(sklep);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             //todo chech if logo uploaded
-            ViewBag.KategoriaId = new SelectList(db.Kategorias, "Id", "Id");
+            ViewBag.KategoriaId = new SelectList(db.Kategorie, "Id", "Id");
             return View(sklep);
         }
 
         public JsonResult IsSklepUnique(string id)
         {
-            if (db.Skleps.Find(id) == null)
+            if (db.Sklepy.Find(id) == null)
                 return Json(true, JsonRequestBehavior.AllowGet);
             return Json(string.Format("Nazwa {0} jest już zajęta",id), JsonRequestBehavior.AllowGet);
         }
@@ -82,7 +82,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sklep sklep = db.Skleps.Find(id);
+            Sklep sklep = db.Sklepy.Find(id);
             if (sklep == null)
             {
                 return HttpNotFound();
@@ -113,7 +113,7 @@ namespace Promocje_Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sklep sklep = db.Skleps.Find(id);
+            Sklep sklep = db.Sklepy.Find(id);
             if (sklep == null)
             {
                 return HttpNotFound();
@@ -126,8 +126,8 @@ namespace Promocje_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Sklep sklep = db.Skleps.Find(id);
-            db.Skleps.Remove(sklep);
+            Sklep sklep = db.Sklepy.Find(id);
+            db.Sklepy.Remove(sklep);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

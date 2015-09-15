@@ -14,7 +14,8 @@ namespace Promocje_Web.Models
         //[Remote("IsSklepUnique", "Sklepy")]
         [DisplayName("Nazwa")]
         [CustomRemoteValidation("IsSklepUnique", "Sklepy")]
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Promocje_Web.Properties.Resources))]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Promocje_Web.Properties.Resources))]
+        [Required]
         public string Id { get; set; }
        
         [Required(ErrorMessage = "Wybierz obraz reprezentujący logo sklepu.")]

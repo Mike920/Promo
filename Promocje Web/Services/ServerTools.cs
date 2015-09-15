@@ -2,6 +2,7 @@
 using Promocje_Web.Utility;
 using System.Web;
 using System.IO;
+using System.Linq;
 
 namespace Promocje_Web.Services
 {
@@ -27,6 +28,29 @@ namespace Promocje_Web.Services
             if (string.IsNullOrWhiteSpace(fileName)) 
                 return false;
             return File.Exists(Path.Combine(TempFolderPath, fileName));
+        }
+
+        public static bool TempFolderContains(string[] fileNameArray)
+        {
+            return !fileNameArray.Any(s => !TempFolderContains(s));
+        }
+
+        public static string RelativePath( string absolutePath)
+        {
+            return absolutePath.Replace(HttpContext.Current.Server.MapPath("~/"), "/").Replace(@"\", "/");
+        }
+
+        public static List<string> ConvertPdfToImages(string filePath, int dpi = 128)
+        {
+            string outputDirectory = Path.Combine(TempFolderPath, Path.GetRandomFileName());
+            Directory.CreateDirectory(outputDirectory);
+
+            PdfTools.PDFToImages(filePath, outputDirectory, dpi);
+            var outputFiles = Directory.GetFiles(outputDirectory).ToList();
+
+            for (int i = 0; i < outputFiles.Count; i++)
+                outputFiles[i] = Path.Combine(outputDirectory, outputFiles[i]);
+            return outputFiles;
         }
 
         static public class CategoriesList

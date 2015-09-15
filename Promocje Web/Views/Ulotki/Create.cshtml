@@ -1,0 +1,258 @@
+﻿@model Promocje_Web.Models.Ulotka
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "upload-form" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Ulotka</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.urls)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @style = "width:400px;" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SklepId, "Sklep", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("SklepId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SklepId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class=""></label>@Html.Label("","Rozszerzenie plików", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("FileSetType", new SelectList(new List<string>{ "pdf", "jpg, gif, png" }) , htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.HiddenFor(model => model.urls)
+                @Html.ValidationMessageFor(model => model.urls, "", new { @class = "text-danger" })
+                <p class="text-info">Wybierz jeden plik PDF lub kilka plików jpg,png lub gif.</p>
+                <div id="uploader">
+                    <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10" style="margin-left:0;">
+                <input type="button" id="submitUpload" value="Dodaj" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" />
+    <link href="~/Scripts/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css" rel="stylesheet" />
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryUi")
+    <script src="~/Scripts/plupload/moxie.js"></script>
+    <script src="~/Scripts/plupload/plupload.dev.js"></script>
+    <script src="~/Scripts/plupload/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+    <script src="~/Scripts/plupload/i18n/pl.js"></script>
+    <script type="text/javascript">
+
+        //Enable validation of hidden fields
+        $.validator.setDefaults({
+            ignore: []
+        });
+
+        // Initialize the widget when the DOM is ready
+        $(function () {
+            var urlsElement = $('#urls');
+            var filesUrls = "";
+
+            $("#StartDate").datepicker();
+            $("#EndDate").datepicker();
+
+            var settingsPdf = {
+                // General settings
+                runtimes: 'html5,flash,silverlight,html4',
+                url: "/api/TempFile",
+
+                // Maximum file size
+                 max_file_size : '50mb',
+                 max_file_count: 1,
+                 multi_selection : false,
+
+                // Specify what files to browse for
+                filters: [
+                    { title: "Plik PDF", extensions: "pdf" }
+                ],
+
+                // Rename files by clicking on their titles
+                rename: true,
+
+                // Sort files
+                sortable: true,
+
+                // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
+                dragdrop: true,
+
+                // Views to activate
+                views: {
+                    list: true,
+                    thumbs: true, // Show thumbs
+                    active: 'thumbs'
+                },
+
+                // Flash settings
+                flash_swf_url: "~/Scripts/plupload/Moxie.swf",
+                // Silverlight settings
+                silverlight_xap_url: "~/Scripts/plupload/js/Moxie.xap",
+
+                init: {
+                    FilesAdded: function () {
+                        urlsElement.val('ok');
+                        urlsElement.valid();
+                    },
+                    FilesRemoved: function () {
+                        urlsElement.val('');
+                    },
+                    FileUploaded: function (up, file, info) {
+                        var response = $.parseJSON(info.response);
+                        //filesNames = filesNames.concat(response);
+                        urlsElement.val(response[0]);
+                        urlsElement.valid();
+
+                        $('#upload-form').submit();
+                    }
+                },
+                buttons: { browse: true, start: false, stop: false }
+
+            };
+
+            var settingsImg = {
+                // General settings
+                runtimes: 'html5,flash,silverlight,html4',
+                url: "/api/TempFile",
+
+                // Specify what files to browse for
+                filters: [
+                    { title: "Image files", extensions: "jpg,gif,png" }
+                ],
+
+                // Rename files by clicking on their titles
+                rename: true,
+
+                // Sort files
+                sortable: true,
+
+                // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
+                dragdrop: true,
+
+                // Views to activate
+                views: {
+                    list: true,
+                    thumbs: true, // Show thumbs
+                    active: 'thumbs'
+                },
+
+                // Flash settings
+                flash_swf_url: "~/Scripts/plupload/Moxie.swf",
+                // Silverlight settings
+                silverlight_xap_url: "~/Scripts/plupload/js/Moxie.xap",
+
+                init: {
+                    FilesAdded: function () {
+                        urlsElement.val('ok');
+                        urlsElement.valid();
+                    },
+                    FilesRemoved: function () {
+                        urlsElement.val('');
+                    },
+                    FileUploaded: function (up, file, info) {
+                        var response = $.parseJSON(info.response);
+
+                        var responseString = ""
+                        for (var i = 0; i < response.length; i++) {
+                            responseString += response[i] + ";";
+                        }
+                        filesUrls += responseString;
+                    },
+                    UploadComplete: function () {
+                        urlsElement.val(filesUrls);
+                        urlsElement.valid();
+                        $('#upload-form').submit();
+                    }
+                },
+                buttons: { browse: true, start: false, stop: false }
+
+            };
+
+            var uploader = $("#uploader").plupload(settingsPdf);
+
+            //Change plupload plugin settings according to selected file types
+            $('select').on('change', function (e) {
+                var optionSelected = $("option:selected", this).index();
+
+                uploader.plupload('destroy');
+                urlsElement.val('');
+
+                if (optionSelected == 0) {
+                    uploader.plupload(settingsPdf);
+                }
+                else {
+                    uploader.plupload(settingsImg)
+                }
+            });
+
+            //customize upload button behavior
+            $('#submitUpload').click(function () {
+                var $form = $('#upload-form');
+                if ($form.valid()) {
+                    $('#submitUpload').val('Wysyłanie ...');
+                    $('#submitUpload').attr("disabled", true);
+                    $("#uploader").plupload('start');
+                }
+            });
+
+        });
+    </script>
+}

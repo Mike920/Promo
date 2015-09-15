@@ -13,18 +13,19 @@ namespace Promocje_Web.Controllers.Api
     public class TempFileController : ApiController
     {
         // GET: api/TempFile
-        public IEnumerable<string> Get()
+      /*  public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
-        }
+        }*/
 
         // GET: api/TempFile/5
-        public string Get(int id)
+      /*  public string Get(int id)
         {
             return "value";
-        }
+        }*/
 
         // POST: api/TempFile
+        [HttpPost]
         public IHttpActionResult Post()
         {
             List<string> fileNames = new List<string>();
@@ -48,13 +49,13 @@ namespace Promocje_Web.Controllers.Api
         }
 
         // PUT: api/TempFile/5
-        public void Put(int id, [FromBody]string value)
+      /*  public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/TempFile/5
         public void Delete(int id)
         {
-        }
+        }*/
     }
 }
