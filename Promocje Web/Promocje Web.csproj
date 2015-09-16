@@ -484,6 +484,7 @@
     <Folder Include="App_Data\Videos\" />
     <Folder Include="MediaData\Data\Images\" />
     <Folder Include="MediaData\Data\Pdf\" />
+    <Folder Include="MediaData\Data\Ulotki\" />
     <Folder Include="MediaData\Logos\" />
     <Folder Include="MediaData\Videos\" />
     <Folder Include="Temp\" />

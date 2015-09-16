@@ -40,17 +40,18 @@ namespace Promocje_Web.Services
             return absolutePath.Replace(HttpContext.Current.Server.MapPath("~/"), "/").Replace(@"\", "/");
         }
 
-        public static List<string> ConvertPdfToImages(string filePath, int dpi = 128)
+        public static string ConvertPdfToImages(string filePath, int dpi = 128)
         {
-            string outputDirectory = Path.Combine(TempFolderPath, Path.GetRandomFileName());
-            Directory.CreateDirectory(outputDirectory);
+            string outputDirectory = ServerTools.MediaFolderPath("Data/Images");
 
-            PdfTools.PDFToImages(filePath, outputDirectory, dpi);
-            var outputFiles = Directory.GetFiles(outputDirectory).ToList();
+            
+            var outputFiles = PdfTools.PDFToImages(filePath, outputDirectory, dpi, true);
 
-            for (int i = 0; i < outputFiles.Count; i++)
-                outputFiles[i] = Path.Combine(outputDirectory, outputFiles[i]);
-            return outputFiles;
+            string imageList = "";
+            foreach (var item in outputFiles)
+                imageList += RelativePath(item) + ";";
+            
+            return imageList;
         }
 
         static public class CategoriesList

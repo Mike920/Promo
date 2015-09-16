@@ -62,21 +62,40 @@ namespace Promocje_Web.Controllers
 
             if (TryValidateModel(ulotka) && ServerTools.TempFolderContains(urls))
             {
-                string destinationUrlList = string.Empty;
-                foreach (var item in urls)
+                try
                 {
-                    //todo better naming /sklep/ulotka123
-                    string sourcePath = Path.Combine(ServerTools.TempFolderPath, item);
-                    string folder = ulotka.FileSetType == FileSetType.Pdf ? "Data/Pdf" : "Data/Images";
-                    string destinationPath = Path.Combine(ServerTools.MediaFolderPath(folder), item);
-                    System.IO.File.Move(sourcePath, destinationPath);
-                    destinationUrlList += ServerTools.RelativePath(destinationPath) +";";
-                }
-                ulotka.urls = destinationUrlList;
+                    if (ulotka.FileSetType == FileSetType.Pdf)
+                    {
+                        string filePath = Path.Combine(ServerTools.TempFolderPath, urls.First());
+                        ulotka.urls = ServerTools.ConvertPdfToImages(filePath);
+                        System.IO.File.Delete(filePath);
+                    }
+                    else
+                    {
+                        string destinationUrlList = string.Empty;
+                        foreach (var item in urls)
+                        {
+                            //todo better naming /sklep/ulotka123
+                            string sourcePath = Path.Combine(ServerTools.TempFolderPath, item);
+                            string folder = ulotka.FileSetType == FileSetType.Pdf ? "Data/Pdf" : "Data/Images";
+                            string destinationFilePath = Path.Combine(ServerTools.MediaFolderPath(folder), item);
+                            System.IO.File.Move(sourcePath, destinationFilePath);
+                            destinationUrlList += ServerTools.RelativePath(destinationFilePath) + ";";
+                        }
+                        ulotka.urls = destinationUrlList;
+                    }
 
-                db.Ulotki.Add(ulotka);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                    db.Ulotki.Add(ulotka);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                   string key = "urls";
+                   if(ModelState.ContainsKey(key))
+                       ModelState.Remove(key);
+                    ModelState.AddModelError(key, "Wybrane pliki nie są wspierane.");
+                }
             }
             
             ViewBag.SklepId = new SelectList(db.Sklepy, "Id", "Id", ulotka.SklepId);
