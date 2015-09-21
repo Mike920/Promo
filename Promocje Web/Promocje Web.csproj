@@ -209,10 +209,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <DllToCopy Condition=" '$(PROCESSOR_ARCHITECTURE)' == 'x86' And '$(PROCESSOR_ARCHITEW6432)' == '' " Include="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86\SQLite.Interop.dll" />
-    <DllToCopy Condition=" '$(PROCESSOR_ARCHITECTURE)' == 'AMD64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' " Include="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64\SQLite.Interop.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -431,6 +427,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\video-js.swf" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -572,9 +571,6 @@
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild">
-    <Copy SourceFiles="@(DllToCopy)" DestinationFolder="$(OutputPath)" />
-  </Target>
   <!--<Target Name="AfterBuild">
   </Target>-->
 </Project>
